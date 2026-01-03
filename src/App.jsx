@@ -16,6 +16,7 @@ import Contacts from './features/contacts/Contacts';
 import Persons from './features/persons/Persons';
 import AuditLogs from './features/audit/AuditLogs';
 import AdminUsers from './features/admin/AdminUsers';
+import QueueStatus from './features/queue/QueueStatus';
 
 import { Box, CircularProgress } from '@mui/material';
 
@@ -81,6 +82,7 @@ function App() {
         <Route path="/persons" element={<ProtectedRoute><Persons /></ProtectedRoute>} />
         <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
         <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+        <Route path="/admin/queue" element={<ProtectedRoute><QueueStatus /></ProtectedRoute>} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

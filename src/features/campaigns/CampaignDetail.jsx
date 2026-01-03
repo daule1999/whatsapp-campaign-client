@@ -296,10 +296,12 @@ export default function CampaignDetail() {
             labelKey="name"
             valueKey="id"
             loading={contactsLoading}
-            renderOption={(person) => (
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Typography variant="body2" fontWeight={500}>{person.name}</Typography>
-                <Typography variant="caption" color="text.secondary">{person.phone}</Typography>
+            renderOption={(props, person) => (
+              <Box component="li" {...props} key={person.id}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <Typography variant="body2" fontWeight={500}>{person.name}</Typography>
+                  <Typography variant="caption" color="text.secondary">{person.phone}</Typography>
+                </Box>
               </Box>
             )}
           />

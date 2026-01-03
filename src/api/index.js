@@ -139,5 +139,10 @@ export const dashboardApi = {
     getHealth: () => api.get('/health'),
 };
 
+// Queue API
+export const queueApi = {
+    getStatus: () => api.get('/queue/status'),
+};
+
 export default api;
 
