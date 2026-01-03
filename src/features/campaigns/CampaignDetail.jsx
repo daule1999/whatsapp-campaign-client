@@ -14,7 +14,7 @@ import {
   ListItemText,
   Paper
 } from '@mui/material';
-import { campaignsApi, contactsApi } from '../../api';
+import { campaignsApi, personsApi } from '../../api';
 import { Button, Badge, Modal, Card, Table, SearchableSelect } from '../../components/common';
 
 export default function CampaignDetail() {
@@ -51,7 +51,7 @@ export default function CampaignDetail() {
     setContactsLoading(true);
     setSelectedContacts([]);
     try {
-      const { data } = await contactsApi.getAll({ limit: 500 });
+      const { data } = await personsApi.getAll({ limit: 500 });
       const existingIds = new Set(campaign.contacts?.map(c => c.contact_id) || []);
       setAllContacts(data.data.filter(c => !existingIds.has(c.id)));
     } catch (error) {
@@ -80,10 +80,10 @@ export default function CampaignDetail() {
 
     setImporting(true);
     try {
-      const importResult = await contactsApi.importCsv(file);
+      const importResult = await personsApi.importCsv(file);
       const { imported, skipped } = importResult.data.data;
       
-      const { data } = await contactsApi.getAll({ limit: 500 });
+      const { data } = await personsApi.getAll({ limit: 500 });
       const existingIds = new Set(campaign.contacts?.map(c => c.contact_id) || []);
       const newContacts = data.data.filter(c => !existingIds.has(c.id));
       
