@@ -146,5 +146,15 @@ export const queueApi = {
     getStatus: () => api.get('/queue/status'),
 };
 
+// Autoresponders API (Chatbot Workflows)
+export const autorespondersApi = {
+    getAll: () => api.get('/autoresponders'),
+    getById: (id) => api.get(`/autoresponders/${id}`),
+    create: (data) => api.post('/autoresponders', data),
+    update: (id, data) => api.put(`/autoresponders/${id}`, data),
+    delete: (id) => api.delete(`/autoresponders/${id}`),
+    toggle: (id) => api.patch(`/autoresponders/${id}/toggle`),
+};
+
 export default api;
 

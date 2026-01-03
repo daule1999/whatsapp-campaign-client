@@ -41,6 +41,7 @@ const navItems = [
   { path: '/campaigns', icon: Send, label: 'Campaigns' },
   { path: '/templates', icon: FileText, label: 'Templates' },
   { path: '/persons', icon: Users, label: 'Persons' },
+  { path: '/autoresponders', icon: MessageSquare, label: 'Autoresponders' },
   { path: '/audit', icon: ClipboardList, label: 'Audit Logs', adminOnly: true },
   { path: '/admin/users', icon: Shield, label: 'User Management', adminOnly: true },
 ];
