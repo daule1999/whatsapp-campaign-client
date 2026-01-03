@@ -32,6 +32,7 @@ export default function CampaignDetail() {
   const [sending, setSending] = useState(false);
   const [importing, setImporting] = useState(false);
   const [contactsLoading, setContactsLoading] = useState(false);
+  const [errorDialog, setErrorDialog] = useState({ open: false, name: '', error: '' });
 
   useEffect(() => { loadCampaign(); }, [id]);
 
@@ -164,8 +165,11 @@ export default function CampaignDetail() {
        header: 'Error', 
        accessor: 'error', 
        render: (row) => row.error ? (
-         <Box sx={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={row.error}>
-           <Typography variant="caption" color="error">{row.error}</Typography>
+         <Box 
+           sx={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }} 
+           onClick={() => setErrorDialog({ open: true, name: row.name, error: row.error })}
+         >
+           <Typography variant="caption" color="error">{row.error?.substring(0, 30)}...</Typography>
          </Box>
        ) : '-' 
     },
@@ -439,6 +443,30 @@ export default function CampaignDetail() {
         footer={<Button onClick={() => setShowErrors(false)}>Close</Button>}
       >
         <CampaignErrors campaignId={id} onClose={() => setShowErrors(false)} />
+      </Modal>
+
+      {/* Error Detail Dialog */}
+      <Modal
+        isOpen={errorDialog.open}
+        onClose={() => setErrorDialog({ open: false, name: '', error: '' })}
+        title={`Error for ${errorDialog.name}`}
+        size="medium"
+        footer={<Button onClick={() => setErrorDialog({ open: false, name: '', error: '' })}>Close</Button>}
+      >
+        <Box sx={{ p: 2 }}>
+          <Typography variant="body2" component="pre" sx={{ 
+            whiteSpace: 'pre-wrap', 
+            wordBreak: 'break-word',
+            fontFamily: 'monospace',
+            backgroundColor: '#f5f5f5',
+            p: 2,
+            borderRadius: 1,
+            maxHeight: 400,
+            overflow: 'auto'
+          }}>
+            {errorDialog.error}
+          </Typography>
+        </Box>
       </Modal>
     </Box>
   );
