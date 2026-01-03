@@ -53,7 +53,15 @@ export default function CampaignDetail() {
     try {
       const { data } = await personsApi.getAll({ limit: 500 });
       const existingIds = new Set(campaign.contacts?.map(c => c.contact_id) || []);
-      setAllContacts(data.data.filter(c => !existingIds.has(c.id)));
+      // Transform data to match UI expected format
+      const transformedPersons = data.data
+        .filter(p => !existingIds.has(p.id))
+        .map(p => ({
+          ...p,
+          name: `${p.firstName || ''} ${p.lastName || ''}`.trim(),
+          phone: `+${p.phoneCountryCode || '91'}${p.phoneNumber}`
+        }));
+      setAllContacts(transformedPersons);
     } catch (error) {
       console.error('Load contacts error:', error);
       setAllContacts([]);
