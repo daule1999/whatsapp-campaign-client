@@ -27,7 +27,8 @@ import {
   ClipboardList, 
   LogOut, 
   Menu,
-  ChevronLeft
+  ChevronLeft,
+  Shield
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import config from '../../config';
@@ -41,6 +42,7 @@ const navItems = [
   { path: '/templates', icon: FileText, label: 'Templates' },
   { path: '/persons', icon: Users, label: 'Persons' },
   { path: '/audit', icon: ClipboardList, label: 'Audit Logs', adminOnly: true },
+  { path: '/admin/users', icon: Shield, label: 'User Management', adminOnly: true },
 ];
 
 export default function Layout({ children }) {

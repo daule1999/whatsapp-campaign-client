@@ -15,6 +15,7 @@ import Templates from './features/templates/Templates';
 import Contacts from './features/contacts/Contacts';
 import Persons from './features/persons/Persons';
 import AuditLogs from './features/audit/AuditLogs';
+import AdminUsers from './features/admin/AdminUsers';
 
 import { Box, CircularProgress } from '@mui/material';
 
@@ -79,6 +80,7 @@ function App() {
         <Route path="/contacts" element={<ProtectedRoute><Contacts /></ProtectedRoute>} />
         <Route path="/persons" element={<ProtectedRoute><Persons /></ProtectedRoute>} />
         <Route path="/audit" element={<ProtectedRoute><AuditLogs /></ProtectedRoute>} />
+        <Route path="/admin/users" element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
