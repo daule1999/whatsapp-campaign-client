@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Send, Plus, Trash2, Users, ArrowLeft, Upload, AlertTriangle, MessageSquare } from 'lucide-react';
+import { Send, Plus, Trash2, Users, ArrowLeft, Upload, AlertTriangle, MessageSquare, AlertCircle } from 'lucide-react';
 import { 
   Box, 
   Typography, 
@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { campaignsApi, personsApi } from '../../api';
 import { Button, Badge, Modal, Card, Table, SearchableSelect } from '../../components/common';
+import CampaignErrors from './CampaignErrors';
 
 export default function CampaignDetail() {
   const { id } = useParams();
@@ -24,6 +25,7 @@ export default function CampaignDetail() {
   const [campaign, setCampaign] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showAddContacts, setShowAddContacts] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
   const [showSendConfirm, setShowSendConfirm] = useState(false);
   const [allContacts, setAllContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
@@ -159,6 +161,15 @@ export default function CampaignDetail() {
     { header: 'Phone', accessor: 'phone' },
     { header: 'Status', render: (row) => <Badge variant={getStatusVariant(row.status)}>{row.status}</Badge> },
     { 
+       header: 'Error', 
+       accessor: 'error', 
+       render: (row) => row.error ? (
+         <Box sx={{ maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={row.error}>
+           <Typography variant="caption" color="error">{row.error}</Typography>
+         </Box>
+       ) : '-' 
+    },
+    { 
       header: '', 
       width: '60px',
       render: (row) => campaign.status === 'draft' && (
@@ -207,6 +218,11 @@ export default function CampaignDetail() {
           {campaign.status === 'draft' && (
             <Button startIcon={<Send size={18} />} onClick={openSendConfirmation} loading={sending}>
               Send Campaign
+            </Button>
+          )}
+          {(campaign.failedCount > 0 || campaign.failed_count > 0) && (
+            <Button variant="secondary" startIcon={<AlertCircle size={18} />} onClick={() => setShowErrors(true)}>
+              View Errors
             </Button>
           )}
         </Stack>
@@ -392,6 +408,18 @@ export default function CampaignDetail() {
             </Paper>
           </Box>
         </Box>
+      </Modal>
+
+
+      {/* Errors Modal */}
+      <Modal
+        isOpen={showErrors}
+        onClose={() => setShowErrors(false)}
+        title="Campaign Error Logs"
+        size="large"
+        footer={<Button onClick={() => setShowErrors(false)}>Close</Button>}
+      >
+        <CampaignErrors campaignId={id} onClose={() => setShowErrors(false)} />
       </Modal>
     </Box>
   );

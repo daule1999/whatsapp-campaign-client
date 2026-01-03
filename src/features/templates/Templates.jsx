@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Plus, Trash2, Edit } from 'lucide-react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, MenuItem, Chip } from '@mui/material';
 import { templatesApi } from '../../api';
 import { Button, Input, Modal, Table, Card } from '../../components/common';
 
@@ -12,6 +12,7 @@ export default function Templates() {
   const [formData, setFormData] = useState({
     name: '',
     wa_template_name: '',
+    category: 'UTILITY',
     language_code: 'en',
     body_preview: ''
   });
@@ -33,7 +34,7 @@ export default function Templates() {
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ name: '', wa_template_name: '', language_code: 'en', body_preview: '' });
+    setFormData({ name: '', wa_template_name: '', category: 'UTILITY', language_code: 'en', body_preview: '' });
     setShowModal(true);
   };
 
@@ -42,6 +43,7 @@ export default function Templates() {
     setFormData({
       name: template.name,
       wa_template_name: template.wa_template_name,
+      category: template.category || 'UTILITY',
       language_code: template.language_code || 'en',
       body_preview: template.body_preview || ''
     });
@@ -79,6 +81,11 @@ export default function Templates() {
   const columns = [
     { header: 'Name', accessor: 'name' },
     { header: 'WhatsApp Template', accessor: 'wa_template_name' },
+    { 
+      header: 'Category', 
+      accessor: 'category',
+      render: (row) => <Chip label={row.category || 'MARKETING'} size="small" color={row.category === 'UTILITY' ? 'info' : 'default'} />
+    },
     { header: 'Language', accessor: 'language_code' },
     { 
       header: 'Preview', 
@@ -145,6 +152,19 @@ export default function Templates() {
             required
             helperText="Must match the exact name in WhatsApp Business Manager"
           />
+          <Input
+            select
+            label="Category"
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            helperText="Select template category"
+          >
+            {['MARKETING', 'UTILITY', 'AUTHENTICATION'].map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Input>
           <Input
             label="Language Code"
             value={formData.language_code}

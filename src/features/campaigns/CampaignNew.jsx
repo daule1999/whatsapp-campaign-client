@@ -65,7 +65,7 @@ export default function CampaignNew() {
               
               <Autocomplete
                 options={templates}
-                getOptionLabel={(option) => `${option.name} (${option.wa_template_name})`}
+                getOptionLabel={(option) => `${option.name} ${option.waTemplateName ? `(${option.waTemplateName})` : ''}`}
                 value={selectedTemplate}
                 onChange={(e, newValue) => setSelectedTemplate(newValue)}
                 renderInput={(params) => (
@@ -80,7 +80,7 @@ export default function CampaignNew() {
                     <Box>
                       <Typography variant="body1">{option.name}</Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {option.wa_template_name} • {option.language_code}
+                        {option.waTemplateName} • {option.languageCode}
                       </Typography>
                     </Box>
                   </Box>

@@ -66,6 +66,7 @@ export const templatesApi = {
     getAll: (params) => api.get('/templates', { params }),
     getById: (id) => api.get(`/templates/${id}`),
     create: (data) => api.post('/templates', data),
+    sync: () => api.post('/templates/sync'),
     update: (id, data) => api.put(`/templates/${id}`, data),
     delete: (id) => api.delete(`/templates/${id}`),
 };
@@ -116,6 +117,7 @@ export const campaignsApi = {
     addContacts: (id, contactIds) => api.post(`/campaigns/${id}/contacts`, { contact_ids: contactIds }),
     removeContacts: (id, contactIds) => api.delete(`/campaigns/${id}/contacts`, { data: { contact_ids: contactIds } }),
     send: (id) => api.post(`/campaigns/${id}/send`),
+    getErrors: (id) => api.get(`/campaigns/${id}/errors`),
 };
 
 // Audit API
