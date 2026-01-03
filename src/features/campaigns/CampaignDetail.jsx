@@ -216,8 +216,15 @@ export default function CampaignDetail() {
             {campaign.status}
           </Badge>
           {campaign.status === 'draft' && (
-            <Button startIcon={<Send size={18} />} onClick={openSendConfirmation} loading={sending}>
-              Send Campaign
+            <Button 
+              startIcon={<Send size={18} />} 
+              onClick={openSendConfirmation} 
+              loading={sending}
+              disabled={campaign.template_status && campaign.template_status !== 'approved'}
+            >
+              {campaign.template_status && campaign.template_status !== 'approved' 
+                 ? `Template ${campaign.template_status}` 
+                 : 'Send Campaign'}
             </Button>
           )}
           {(campaign.failedCount > 0 || campaign.failed_count > 0) && (
@@ -230,7 +237,19 @@ export default function CampaignDetail() {
 
       <Grid container spacing={2} mb={4}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <InfoCard label="Template" value={campaign.template_name || 'Not selected'} />
+          <InfoCard 
+            label="Template" 
+            value={
+              <Box>
+                <Typography variant="h5" fontWeight={600}>{campaign.template_name || 'Not selected'}</Typography>
+                {campaign.template_status && (
+                  <Badge variant={campaign.template_status === 'approved' ? 'success' : 'warning'} sx={{ mt: 1 }}>
+                    {campaign.template_status.toUpperCase()}
+                  </Badge>
+                )}
+              </Box>
+            } 
+          />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <InfoCard label="Total Persons" value={campaign.totalContacts || campaign.total_contacts || 0} />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Trash2, Edit } from 'lucide-react';
+import { Plus, Trash2, Edit, RefreshCw } from 'lucide-react';
 import { Box, Typography, MenuItem, Chip } from '@mui/material';
 import { templatesApi } from '../../api';
 import { Button, Input, Modal, Table, Card } from '../../components/common';
@@ -17,6 +17,7 @@ export default function Templates() {
     body_preview: ''
   });
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => { loadTemplates(); }, []);
 
@@ -78,6 +79,18 @@ export default function Templates() {
     }
   };
 
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      await templatesApi.sync();
+      loadTemplates();
+    } catch (error) {
+      alert('Failed to sync templates');
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const columns = [
     { header: 'Name', accessor: 'name' },
     { header: 'WhatsApp Template', accessor: 'wa_template_name' },
@@ -85,6 +98,15 @@ export default function Templates() {
       header: 'Category', 
       accessor: 'category',
       render: (row) => <Chip label={row.category || 'MARKETING'} size="small" color={row.category === 'UTILITY' ? 'info' : 'default'} />
+    },
+    { 
+      header: 'Status', 
+      accessor: 'status', 
+      render: (row) => {
+        const status = (row.status || 'UNKNOWN').toLowerCase();
+        const colors = { approved: 'success', pending: 'warning', rejected: 'error', paused: 'error' };
+        return <Chip label={status.toUpperCase()} size="small" color={colors[status] || 'default'} />;
+      }
     },
     { header: 'Language', accessor: 'language_code' },
     { 
@@ -118,7 +140,12 @@ export default function Templates() {
             Manage your WhatsApp message templates
           </Typography>
         </Box>
-        <Button startIcon={<Plus size={18} />} onClick={openAddModal}>Add Template</Button>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button variant="secondary" startIcon={<RefreshCw size={18} />} onClick={handleSync} loading={syncing}>
+            Sync
+          </Button>
+          <Button startIcon={<Plus size={18} />} onClick={openAddModal}>Add Template</Button>
+        </Box>
       </Box>
 
       <Card>
@@ -166,11 +193,25 @@ export default function Templates() {
             ))}
           </Input>
           <Input
-            label="Language Code"
+            select
+            label="Language"
             value={formData.language_code}
             onChange={(e) => setFormData({ ...formData, language_code: e.target.value })}
-            placeholder="en"
-          />
+            helperText="Select template language"
+          >
+            {[
+              { code: 'en', name: 'English' },
+              { code: 'en_US', name: 'English (US)' },
+              { code: 'en_GB', name: 'English (UK)' },
+              { code: 'hi', name: 'Hindi' },
+              { code: 'es', name: 'Spanish' },
+              { code: 'pt_BR', name: 'Portuguese (BR)' }
+            ].map((option) => (
+              <MenuItem key={option.code} value={option.code}>
+                {`${option.name} (${option.code})`}
+              </MenuItem>
+            ))}
+          </Input>
           <Input
             label="Body Preview"
             type="textarea"
